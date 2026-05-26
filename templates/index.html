@@ -35,9 +35,7 @@ margin-top:20px;
 
 <body>
 
-<h1>
-Smart Classroom Mood Detector
-</h1>
+<h1>Smart Classroom Mood Detector</h1>
 
 <video
 id="camera"
@@ -46,10 +44,17 @@ playsinline>
 </video>
 
 <p id="mood">
-😊 Happy
+Starting...
 </p>
 
 <script>
+
+const moods=[
+"😊 Happy",
+"😐 Neutral",
+"😴 Sleepy",
+"😢 Sad"
+]
 
 navigator
 .mediaDevices
@@ -64,25 +69,21 @@ document
 .srcObject=
 stream
 
-let moods=[
-"😊 Happy",
-"😐 Neutral",
-"😢 Sad",
-"😴 Sleepy"
-]
-
 setInterval(function(){
 
-let random=
+let mood=
+moods[
 Math.floor(
-Math.random()*4
+Math.random()*moods.length
 )
+]
 
 document
 .getElementById(
 "mood"
-).innerHTML=
-moods[random]
+)
+.innerHTML=
+"Mood: "+mood
 
 },3000)
 
@@ -93,8 +94,9 @@ moods[random]
 document
 .getElementById(
 "mood"
-).innerHTML=
-"Camera Error"
+)
+.innerHTML=
+"Camera Permission Denied"
 
 })
 
