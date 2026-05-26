@@ -1,45 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Smart Mood Detector</title>
+
+<style>
+
+body{
+background:black;
+text-align:center;
+color:aqua;
+}
+
+h1{
+font-size:45px;
+margin-top:30px;
+}
+
+video{
+width:90%;
+max-width:700px;
+border:5px solid aqua;
+border-radius:20px;
+}
+
+#status{
+font-size:30px;
+margin-top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>
+Smart Classroom Mood Detector
+</h1>
+
+<video
+id="camera"
+autoplay
+playsinline
+muted>
+</video>
+
+<p id="status">
+Loading...
+</p>
+
 <script>
 
-const moods = [
-"😊 Happy",
-"😐 Neutral",
-"😴 Sleepy",
-"😢 Sad"
-]
+let video =
+document.getElementById("camera")
 
-navigator
-.mediaDevices
+navigator.mediaDevices
 .getUserMedia({
 video:true
 })
 
-.then(function(stream){
+.then((stream)=>{
+
+video.srcObject=stream
 
 document
-.getElementById(
-"camera"
-)
-.srcObject=
-stream
-
-document
-.getElementById(
-"mood"
-)
+.getElementById("status")
 .innerHTML=
-"Face Found 😊"
+"Camera Connected ✅"
 
 })
 
-.catch(function(){
+.catch((e)=>{
 
 document
-.getElementById(
-"mood"
-)
+.getElementById("status")
 .innerHTML=
-"No Camera"
+"Allow Camera Permission"
 
 })
 
 </script>
+
+</body>
+
+</html>
