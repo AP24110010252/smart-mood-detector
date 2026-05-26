@@ -21,6 +21,7 @@ border-radius:20px;
 
 #mood{
 font-size:35px;
+margin-top:20px;
 }
 
 </style>
@@ -29,7 +30,9 @@ font-size:35px;
 
 <body>
 
-<h1>Smart Classroom Mood Detector</h1>
+<h1>
+Smart Classroom Mood Detector
+</h1>
 
 <video
 id="camera"
@@ -38,43 +41,42 @@ playsinline>
 </video>
 
 <h2 id="mood">
-Show your face
+Detecting Real Emotion...
 </h2>
 
 <script>
-
-const moods=[
-"😊 Happy",
-"😐 Neutral",
-"😢 Sad",
-"😠 Angry"
-]
 
 navigator
 .mediaDevices
 .getUserMedia({
 video:true
 })
+
 .then((stream)=>{
 
 document
-.getElementById("camera")
+.getElementById(
+"camera"
+)
 .srcObject=stream
 
-setInterval(()=>{
-
-let result=
-moods[
-Math.floor(
-Math.random()*moods.length
+document
+.getElementById(
+"mood"
 )
-]
+.innerHTML=
+"Face Ready ✅"
+
+})
+
+.catch(()=>{
 
 document
-.getElementById("mood")
-.innerHTML=result
-
-},5000)
+.getElementById(
+"mood"
+)
+.innerHTML=
+"Camera Permission Denied ❌"
 
 })
 
