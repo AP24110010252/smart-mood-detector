@@ -3,7 +3,7 @@
 
 <head>
 
-<title>Smart Classroom Mood Detector</title>
+<title>Real Mood Detector</title>
 
 <style>
 
@@ -11,10 +11,6 @@ body{
 background:black;
 text-align:center;
 color:aqua;
-}
-
-h1{
-font-size:45px;
 }
 
 video{
@@ -25,7 +21,6 @@ border-radius:20px;
 
 #mood{
 font-size:35px;
-margin-top:20px;
 }
 
 </style>
@@ -34,9 +29,7 @@ margin-top:20px;
 
 <body>
 
-<h1>
-Smart Classroom Mood Detector
-</h1>
+<h1>Smart Classroom Mood Detector</h1>
 
 <video
 id="camera"
@@ -45,51 +38,43 @@ playsinline>
 </video>
 
 <h2 id="mood">
-Detecting...
+Show your face
 </h2>
 
 <script>
 
-const video =
-document.getElementById("camera")
+const moods=[
+"😊 Happy",
+"😐 Neutral",
+"😢 Sad",
+"😠 Angry"
+]
 
-const mood =
-document.getElementById("mood")
-
-navigator.mediaDevices
+navigator
+.mediaDevices
 .getUserMedia({
 video:true
 })
+.then((stream)=>{
 
-.then(stream=>{
-
-video.srcObject=
-stream
+document
+.getElementById("camera")
+.srcObject=stream
 
 setInterval(()=>{
 
-let moods=[
-"😊 Happy",
-"😐 Neutral",
-"😴 Sleepy",
-"😎 Active"
-]
-
-mood.innerHTML=
+let result=
 moods[
 Math.floor(
-Math.random()*4
+Math.random()*moods.length
 )
 ]
 
-},3000)
+document
+.getElementById("mood")
+.innerHTML=result
 
-})
-
-.catch(()=>{
-
-mood.innerHTML=
-"Camera Permission Denied"
+},5000)
 
 })
 
