@@ -30,6 +30,26 @@ margin-top:20px;
 
 </style>
 
+<script src="https://unpkg.com/face-api.js"></script>
+
+</head>
+
+<body>
+
+<h1>
+Smart Classroom Mood Detector
+</h1>
+
+<video
+id="camera"
+autoplay
+playsinline>
+</video>
+
+<h2 id="mood">
+Opening Camera...
+</h2>
+
 <script>
 
 const video =
@@ -42,23 +62,21 @@ async function start(){
 
 try{
 
-const stream =
+const stream=
 await navigator
 .mediaDevices
 .getUserMedia({
-
 video:true
-
 })
 
 video.srcObject=
 stream
 
-mood.innerHTML=
-"Loading AI..."
-
 video.onloadedmetadata=
 async()=>{
+
+mood.innerHTML=
+"Loading AI..."
 
 await Promise.all([
 
@@ -105,46 +123,36 @@ const result=
 
 await faceapi
 .detectSingleFace(
-
 video,
-
 new faceapi
 .TinyFaceDetectorOptions()
-
 )
-
 .withFaceExpressions()
 
 if(result){
 
 let emotion=
 
-Object
-.keys(
+Object.keys(
 result.expressions
-)
-
-.reduce(
-
+).reduce(
 (a,b)=>
-
-result.expressions[a]
->
-
+result.expressions[a]>
 result.expressions[b]
-
 ?
-
 a
-
 :
-
 b
-
 )
 
 mood.innerHTML=
-emotion
+"😊 "+emotion
+
+}
+else{
+
+mood.innerHTML=
+"No Face Detected"
 
 }
 
