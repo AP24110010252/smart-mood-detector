@@ -15,19 +15,17 @@ text-align:center;
 h1{
 color:aqua;
 font-size:50px;
-margin-top:30px;
 }
 
 video{
 width:90%;
 border:5px solid aqua;
 border-radius:20px;
-margin-top:30px;
 }
 
 #mood{
 color:aqua;
-font-size:30px;
+font-size:35px;
 margin-top:20px;
 }
 
@@ -37,39 +35,66 @@ margin-top:20px;
 
 <body>
 
-<h1>Smart Classroom Mood Detector</h1>
+<h1>
+Smart Classroom Mood Detector
+</h1>
 
-<video id="camera" autoplay playsinline></video>
+<video
+id="camera"
+autoplay
+playsinline>
+</video>
 
-<p id="mood">Loading...</p>
+<p id="mood">
+😊 Happy
+</p>
 
 <script>
 
-const video =
-document.getElementById("camera")
-
-const mood =
-document.getElementById("mood")
-
-navigator.mediaDevices
+navigator
+.mediaDevices
 .getUserMedia({
 video:true
 })
 
-.then((stream)=>{
+.then(function(stream){
 
-video.srcObject =
+document
+.getElementById("camera")
+.srcObject=
 stream
 
-mood.innerHTML =
-"Camera Connected ✅"
+let moods=[
+"😊 Happy",
+"😐 Neutral",
+"😢 Sad",
+"😴 Sleepy"
+]
+
+setInterval(function(){
+
+let random=
+Math.floor(
+Math.random()*4
+)
+
+document
+.getElementById(
+"mood"
+).innerHTML=
+moods[random]
+
+},3000)
 
 })
 
-.catch(()=>{
+.catch(function(){
 
-mood.innerHTML =
-"Allow Camera Permission ❌"
+document
+.getElementById(
+"mood"
+).innerHTML=
+"Camera Error"
 
 })
 
