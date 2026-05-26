@@ -1,15 +1,14 @@
 from flask import Flask, render_template, Response
 import cv2
-from fer import FER
-import logging
-
-logging.getLogger('tensorflow').setLevel(logging.ERROR)
 
 app = Flask(__name__)
 
 camera = cv2.VideoCapture(0)
 
-detector = FER(mtcnn=True)
+face = cv2.CascadeClassifier(
+    cv2.data.haarcascades +
+    "haarcascade_frontalface_default.xml"
+)
 
 def generate_frames():
 
@@ -20,60 +19,62 @@ def generate_frames():
         if not success:
             break
 
-        # Detect emotions
-        result = detector.detect_emotions(frame)
+        gray = cv2.cvtColor(
+            frame,
+            cv2.COLOR_BGR2GRAY
+        )
 
-        mood = "No Face"
+        faces = face.detectMultiScale(
+            gray,
+            1.3,
+            5
+        )
 
-        if result:
+        for (x, y, w, h) in faces:
 
-            emotions = result[0]["emotions"]
-            mood = max(emotions, key=emotions.get)
-
-            x, y, w, h = result[0]["box"]
-
-            # Face box
             cv2.rectangle(
                 frame,
                 (x, y),
-                (x + w, y + h),
-                (0, 255, 0),
+                (x+w, y+h),
+                (0,255,0),
                 3
             )
 
-            # Mood text
             cv2.putText(
                 frame,
-                f"Mood: {mood}",
-                (x, y - 10),
+                "Face Detected",
+                (x, y-10),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1,
-                (0, 255, 255),
+                (0,255,255),
                 2
             )
 
-        # Convert frame
-        ret, buffer = cv2.imencode('.jpg', frame)
+        ret, buffer = cv2.imencode(
+            ".jpg",
+            frame
+        )
 
         frame = buffer.tobytes()
 
         yield (
             b'--frame\r\n'
-            b'Content-Type: image/jpeg\r\n\r\n' +
-            frame +
+            b'Content-Type: image/jpeg\r\n\r\n'
+            + frame +
             b'\r\n'
         )
 
-@app.route('/')
+@app.route("/")
 def home():
-    return render_template('index.html')
+    return render_template("index.html")
 
-@app.route('/video')
+@app.route("/video")
 def video():
+
     return Response(
         generate_frames(),
-        mimetype='multipart/x-mixed-replace; boundary=frame'
+        mimetype="multipart/x-mixed-replace; boundary=frame"
     )
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
