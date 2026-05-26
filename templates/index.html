@@ -30,26 +30,6 @@ margin-top:20px;
 
 </style>
 
-<script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
-
-</head>
-
-<body>
-
-<h1>
-Smart Classroom Mood Detector
-</h1>
-
-<video
-id="camera"
-autoplay
-playsinline>
-</video>
-
-<h2 id="mood">
-Loading AI...
-</h2>
-
 <script>
 
 const video =
@@ -67,9 +47,7 @@ await navigator
 .mediaDevices
 .getUserMedia({
 
-video:{
-facingMode:"user"
-}
+video:true
 
 })
 
@@ -77,19 +55,20 @@ video.srcObject=
 stream
 
 mood.innerHTML=
-"Camera Connected ✅"
+"Loading AI..."
+
+video.onloadedmetadata=
+async()=>{
 
 await Promise.all([
 
-faceapi
-.nets
+faceapi.nets
 .tinyFaceDetector
 .loadFromUri(
 "https://justadudewhohacks.github.io/face-api.js/models"
 ),
 
-faceapi
-.nets
+faceapi.nets
 .faceExpressionNet
 .loadFromUri(
 "https://justadudewhohacks.github.io/face-api.js/models"
@@ -107,10 +86,14 @@ detectMood,
 
 }
 
-catch{
+}
+
+catch(error){
 
 mood.innerHTML=
-"Allow Camera Permission ❌"
+"Camera Error ❌"
+
+console.log(error)
 
 }
 
@@ -118,33 +101,37 @@ mood.innerHTML=
 
 async function detectMood(){
 
-if(video.readyState!==4)
-return
-
 const result=
+
 await faceapi
 .detectSingleFace(
+
 video,
+
 new faceapi
 .TinyFaceDetectorOptions()
+
 )
+
 .withFaceExpressions()
 
 if(result){
 
 let emotion=
-Object.keys(
+
+Object
+.keys(
 result.expressions
-).reduce(
+)
+
+.reduce(
 
 (a,b)=>
 
-result
-.expressions[a]
+result.expressions[a]
 >
 
-result
-.expressions[b]
+result.expressions[b]
 
 ?
 
@@ -157,7 +144,7 @@ b
 )
 
 mood.innerHTML=
-"😊 "+emotion
+emotion
 
 }
 
