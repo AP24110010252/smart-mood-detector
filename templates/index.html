@@ -26,15 +26,13 @@ margin-top:20px;
 
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
 
 </head>
 
 <body>
 
-<h1>
-Smart Classroom Mood Detector
-</h1>
+<h1>Smart Classroom Mood Detector</h1>
 
 <video
 id="camera"
@@ -53,107 +51,50 @@ document.getElementById(
 "camera"
 )
 
-Promise.all([
+async function start(){
 
-faceapi
-.nets
-.tinyFaceDetector
-.loadFromUri(
-"https://justadudewhohacks.github.io/face-api.js/models"
-),
-
-faceapi
-.nets
-.faceExpressionNet
-.loadFromUri(
-"https://justadudewhohacks.github.io/face-api.js/models"
+document
+.getElementById(
+"mood"
 )
+.innerHTML=
+"Opening Camera..."
 
-])
+try{
 
-.then(start)
-
-function start(){
-
-navigator
+const stream=
+await navigator
 .mediaDevices
 .getUserMedia({
 video:true
 })
 
-.then((stream)=>{
-
 video.srcObject=
 stream
 
-})
+document
+.getElementById(
+"mood"
+)
+.innerHTML=
+"Camera Connected ✅"
 
 }
 
-video
-.addEventListener(
-"play",
-
-()=>{
-
-setInterval(
-async()=>{
-
-const result=
-
-await faceapi
-.detectSingleFace(
-video,
-new faceapi
-.TinyFaceDetectorOptions()
-)
-
-.withFaceExpressions()
-
-if(result){
-
-let mood=
-
-Object
-.entries(
-result
-.expressions
-)
-
-.sort(
-(a,b)=>
-b[1]-a[1]
-)[0][0]
+catch{
 
 document
 .getElementById(
 "mood"
 )
 .innerHTML=
-"😊 "+mood
+"Camera Failed ❌"
 
 }
 
-else{
-
-document
-.getElementById(
-"mood"
-)
-.innerHTML=
-"Show Face"
-
 }
 
-},
-
-1500
-
-)
-
-}
-
-)
+start()
 
 </script>
 
