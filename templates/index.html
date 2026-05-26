@@ -13,6 +13,10 @@ text-align:center;
 color:aqua;
 }
 
+h1{
+color:aqua;
+}
+
 video{
 width:90%;
 border:5px solid aqua;
@@ -25,6 +29,8 @@ margin-top:20px;
 }
 
 </style>
+
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
 
 </head>
 
@@ -41,7 +47,7 @@ playsinline>
 </video>
 
 <h2 id="mood">
-Opening Camera...
+Loading AI...
 </h2>
 
 <script>
@@ -67,26 +73,91 @@ facingMode:"user"
 
 })
 
-video.srcObject =
+video.srcObject=
 stream
 
-setInterval(()=>{
+mood.innerHTML=
+"Camera Connected ✅"
 
-if(video.readyState===4){
+await Promise.all([
 
-mood.innerHTML =
-"😊 Neutral"
+faceapi
+.nets
+.tinyFaceDetector
+.loadFromUri(
+"https://justadudewhohacks.github.io/face-api.js/models"
+),
 
-}
+faceapi
+.nets
+.faceExpressionNet
+.loadFromUri(
+"https://justadudewhohacks.github.io/face-api.js/models"
+)
 
-},2000)
+])
+
+mood.innerHTML=
+"AI Ready 🤖"
+
+setInterval(
+detectMood,
+3000
+)
 
 }
 
 catch{
 
-mood.innerHTML =
-"Camera Permission Denied ❌"
+mood.innerHTML=
+"Allow Camera Permission ❌"
+
+}
+
+}
+
+async function detectMood(){
+
+if(video.readyState!==4)
+return
+
+const result=
+await faceapi
+.detectSingleFace(
+video,
+new faceapi
+.TinyFaceDetectorOptions()
+)
+.withFaceExpressions()
+
+if(result){
+
+let emotion=
+Object.keys(
+result.expressions
+).reduce(
+
+(a,b)=>
+
+result
+.expressions[a]
+>
+
+result
+.expressions[b]
+
+?
+
+a
+
+:
+
+b
+
+)
+
+mood.innerHTML=
+"😊 "+emotion
 
 }
 
