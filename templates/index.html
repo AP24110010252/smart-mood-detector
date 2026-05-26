@@ -25,6 +25,12 @@ border-radius:20px;
 margin-top:30px;
 }
 
+#mood{
+color:aqua;
+font-size:35px;
+margin-top:20px;
+}
+
 </style>
 
 </head>
@@ -41,6 +47,10 @@ autoplay
 playsinline>
 </video>
 
+<p id="mood">
+Detecting...
+</p>
+
 <script>
 
 navigator
@@ -55,13 +65,19 @@ document
 .getElementById("camera")
 .srcObject=stream
 
+document
+.getElementById("mood")
+.innerHTML =
+"Camera Connected"
+
 })
 
 .catch(function(){
 
-alert(
-"Allow camera permission"
-)
+document
+.getElementById("mood")
+.innerHTML =
+"Camera Permission Denied"
 
 })
 
