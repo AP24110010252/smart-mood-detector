@@ -3,37 +3,69 @@
 
 <head>
 
-    <title>Smart Mood Detector</title>
+<title>Smart Mood Detector</title>
 
-    <style>
+<style>
 
-        body{
-            background:black;
-            text-align:center;
-        }
+body{
+background:black;
+text-align:center;
+}
 
-        h1{
-            color:aqua;
-            font-size:60px;
-            margin-top:30px;
-        }
+h1{
+color:aqua;
+font-size:60px;
+margin-top:30px;
+}
 
-        img{
-            width:700px;
-            border:5px solid aqua;
-            border-radius:20px;
-            margin-top:30px;
-        }
+video{
+width:90%;
+border:5px solid aqua;
+border-radius:20px;
+margin-top:30px;
+}
 
-    </style>
+</style>
 
 </head>
 
 <body>
 
-    <h1>Smart Classroom Mood Detector</h1>
+<h1>
+Smart Classroom Mood Detector
+</h1>
 
-    <img src="{{ url_for('video') }}">
+<video
+id="camera"
+autoplay
+playsinline>
+</video>
+
+<script>
+
+navigator
+.mediaDevices
+.getUserMedia({
+video:true
+})
+
+.then(function(stream){
+
+document
+.getElementById("camera")
+.srcObject=stream
+
+})
+
+.catch(function(){
+
+alert(
+"Allow camera permission"
+)
+
+})
+
+</script>
 
 </body>
 
