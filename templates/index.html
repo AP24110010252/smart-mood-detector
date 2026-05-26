@@ -1,144 +1,30 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-
-<title>Smart Mood Detector</title>
-
-<style>
-
-body{
-background:black;
-text-align:center;
-}
-
-h1{
-color:aqua;
-font-size:60px;
-margin-top:30px;
-}
-
-video{
-width:90%;
-border:5px solid aqua;
-border-radius:20px;
-margin-top:30px;
-}
-
-#mood{
-color:aqua;
-font-size:35px;
-margin-top:20px;
-}
-
-</style>
-
-<script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
-
-</head>
-
-<body>
-
-<h1>
-Smart Classroom Mood Detector
-</h1>
-
-<video
-id="camera"
-autoplay
-playsinline>
-</video>
-
-<p id="mood">
-Starting...
-</p>
-
 <script>
 
-const video =
-document.getElementById(
-"camera"
-)
-
-navigator
-.mediaDevices
+navigator.mediaDevices
 .getUserMedia({
 video:true
 })
 
-.then(async function(stream){
-
-video.srcObject =
-stream
+.then(function(stream){
 
 document
-.getElementById(
-"mood"
-)
+.getElementById("camera")
+.srcObject = stream
+
+document
+.getElementById("mood")
 .innerHTML =
-"Camera Connected"
-
-await faceapi
-.nets
-.tinyFaceDetector
-.loadFromUri(
-"https://justadudewhohacks.github.io/face-api.js/models"
-)
-
-setInterval(
-detectFace,
-1000
-)
+"Camera Connected ✅"
 
 })
 
-.catch(function(){
+.catch(function(error){
 
 document
-.getElementById(
-"mood"
-)
+.getElementById("mood")
 .innerHTML =
-"Camera Permission Denied"
+"Camera Permission Denied ❌"
 
 })
-
-async function detectFace(){
-
-const result =
-await faceapi
-.detectSingleFace(
-video,
-new faceapi
-.TinyFaceDetectorOptions()
-)
-
-if(result){
-
-document
-.getElementById(
-"mood"
-)
-.innerHTML =
-"Face Detected 😊"
-
-}
-
-else{
-
-document
-.getElementById(
-"mood"
-)
-.innerHTML =
-"No Face 😐"
-
-}
-
-}
 
 </script>
-
-</body>
-
-</html>
