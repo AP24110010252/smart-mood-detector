@@ -3,13 +3,17 @@
 
 <head>
 
-<title>AI Mood Detector</title>
+<title>Smart Classroom Mood Detector</title>
 
 <style>
 
 body{
 background:black;
 text-align:center;
+color:aqua;
+}
+
+h1{
 color:aqua;
 }
 
@@ -26,8 +30,6 @@ margin-top:20px;
 
 </style>
 
-<script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
-
 </head>
 
 <body>
@@ -43,95 +45,54 @@ playsinline>
 </video>
 
 <h2 id="mood">
-Loading...
+Opening Camera...
 </h2>
 
 <script>
 
 const video =
-document.getElementById("camera")
+document.getElementById(
+"camera"
+)
 
 const mood =
-document.getElementById("mood")
-
-async function load(){
-
-await faceapi.nets.tinyFaceDetector.loadFromUri(
-"https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/"
+document.getElementById(
+"mood"
 )
 
-await faceapi.nets.faceExpressionNet.loadFromUri(
-"https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/"
-)
+async function startCamera(){
+
+try{
 
 const stream =
-await navigator.mediaDevices.getUserMedia({
-video:true
+await navigator
+.mediaDevices
+.getUserMedia({
+
+video:{
+facingMode:"user"
+}
+
 })
 
 video.srcObject =
 stream
 
 mood.innerHTML =
-"Show Face"
+"Camera Connected ✅"
 
 }
 
-video.addEventListener(
-"play",
-
-()=>{
-
-setInterval(
-async()=>{
-
-const data =
-await faceapi
-.detectSingleFace(
-video,
-new faceapi.TinyFaceDetectorOptions()
-)
-.withFaceExpressions()
-
-if(data){
-
-let top =
-
-Object
-.entries(
-data.expressions
-)
-
-sort(
-(a,b)=>
-b[1]-a[1]
-)[0]
+catch{
 
 mood.innerHTML =
-"Mood: "
-+
-top[0]
+"Allow Camera Permission ❌"
 
 }
 
-else{
-
-mood.innerHTML =
-"No Face"
-
 }
 
-},
-
-1500
-
-)
-
-}
-
-)
-
-load()
+startCamera()
 
 </script>
 
