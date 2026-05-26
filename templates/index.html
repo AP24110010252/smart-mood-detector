@@ -3,17 +3,13 @@
 
 <head>
 
-<title>Smart Classroom Mood Detector</title>
+<title>Smart AI Mood Detector</title>
 
 <style>
 
 body{
 background:black;
 text-align:center;
-color:aqua;
-}
-
-h1{
 color:aqua;
 }
 
@@ -45,22 +41,18 @@ playsinline>
 </video>
 
 <h2 id="mood">
-Show Face 😊
+Opening Camera...
 </h2>
 
 <script>
 
 const video =
-document.getElementById(
-"camera"
-)
+document.getElementById("camera")
 
 const mood =
-document.getElementById(
-"mood"
-)
+document.getElementById("mood")
 
-async function startCamera(){
+async function start(){
 
 try{
 
@@ -78,21 +70,29 @@ facingMode:"user"
 video.srcObject =
 stream
 
+setInterval(()=>{
+
+if(video.readyState===4){
+
 mood.innerHTML =
-"Face Detected 😊"
+"😊 Neutral"
+
+}
+
+},2000)
 
 }
 
 catch{
 
 mood.innerHTML =
-"Allow Camera Permission ❌"
+"Camera Permission Denied ❌"
 
 }
 
 }
 
-startCamera()
+start()
 
 </script>
 
