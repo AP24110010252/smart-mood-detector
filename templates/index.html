@@ -3,7 +3,9 @@
 
 <head>
 
-<title>Smart AI Mood Detector</title>
+<title>Smart Classroom Mood Detector</title>
+
+<script src="https://unpkg.com/face-api.js"></script>
 
 <style>
 
@@ -11,6 +13,8 @@ body{
 background:black;
 text-align:center;
 color:aqua;
+margin:0;
+padding:20px;
 }
 
 h1{
@@ -19,6 +23,7 @@ color:aqua;
 
 video{
 width:90%;
+max-width:700px;
 border:5px solid aqua;
 border-radius:20px;
 }
@@ -26,11 +31,10 @@ border-radius:20px;
 #mood{
 font-size:35px;
 margin-top:20px;
+font-weight:bold;
 }
 
 </style>
-
-<script src="https://unpkg.com/face-api.js"></script>
 
 </head>
 
@@ -43,7 +47,8 @@ Smart Classroom Mood Detector
 <video
 id="camera"
 autoplay
-playsinline>
+playsinline
+muted>
 </video>
 
 <h2 id="mood">
@@ -62,11 +67,15 @@ async function start(){
 
 try{
 
-const stream=
+const stream =
 await navigator
 .mediaDevices
 .getUserMedia({
-video:true
+
+video:{
+facingMode:"user"
+}
+
 })
 
 video.srcObject=
@@ -83,13 +92,13 @@ await Promise.all([
 faceapi.nets
 .tinyFaceDetector
 .loadFromUri(
-"https://justadudewhohacks.github.io/face-api.js/models"
+"https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/"
 ),
 
 faceapi.nets
 .faceExpressionNet
 .loadFromUri(
-"https://justadudewhohacks.github.io/face-api.js/models"
+"https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/"
 )
 
 ])
@@ -99,7 +108,7 @@ mood.innerHTML=
 
 setInterval(
 detectMood,
-3000
+2000
 )
 
 }
@@ -109,7 +118,7 @@ detectMood,
 catch(error){
 
 mood.innerHTML=
-"Camera Error ❌"
+"Allow Camera Permission ❌"
 
 console.log(error)
 
@@ -119,40 +128,74 @@ console.log(error)
 
 async function detectMood(){
 
+try{
+
 const result=
 
 await faceapi
 .detectSingleFace(
+
 video,
+
 new faceapi
 .TinyFaceDetectorOptions()
+
 )
+
 .withFaceExpressions()
 
 if(result){
 
 let emotion=
 
-Object.keys(
+Object
+.entries(
 result.expressions
-).reduce(
-(a,b)=>
-result.expressions[a]>
-result.expressions[b]
-?
-a
-:
-b
 )
+.sort(
+(a,b)=>
+b[1]-a[1]
+)[0][0]
+
+let emoji="😐"
+
+if(emotion==="happy")
+emoji="😊"
+
+if(emotion==="sad")
+emoji="😢"
+
+if(emotion==="angry")
+emoji="😠"
+
+if(emotion==="surprised")
+emoji="😲"
+
+if(emotion==="fearful")
+emoji="😨"
+
+if(emotion==="disgusted")
+emoji="🤢"
 
 mood.innerHTML=
-"😊 "+emotion
+emoji+
+" "+
+emotion
 
 }
 else{
 
 mood.innerHTML=
 "No Face Detected"
+
+}
+
+}
+
+catch{
+
+mood.innerHTML=
+"AI Error ❌"
 
 }
 
