@@ -33,6 +33,8 @@ margin-top:20px;
 
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+
 </head>
 
 <body>
@@ -48,10 +50,15 @@ playsinline>
 </video>
 
 <p id="mood">
-Detecting...
+Starting...
 </p>
 
 <script>
+
+const video =
+document.getElementById(
+"camera"
+)
 
 navigator
 .mediaDevices
@@ -59,27 +66,76 @@ navigator
 video:true
 })
 
-.then(function(stream){
+.then(async function(stream){
+
+video.srcObject =
+stream
 
 document
-.getElementById("camera")
-.srcObject=stream
-
-document
-.getElementById("mood")
+.getElementById(
+"mood"
+)
 .innerHTML =
 "Camera Connected"
+
+await faceapi
+.nets
+.tinyFaceDetector
+.loadFromUri(
+"https://justadudewhohacks.github.io/face-api.js/models"
+)
+
+setInterval(
+detectFace,
+1000
+)
 
 })
 
 .catch(function(){
 
 document
-.getElementById("mood")
+.getElementById(
+"mood"
+)
 .innerHTML =
 "Camera Permission Denied"
 
 })
+
+async function detectFace(){
+
+const result =
+await faceapi
+.detectSingleFace(
+video,
+new faceapi
+.TinyFaceDetectorOptions()
+)
+
+if(result){
+
+document
+.getElementById(
+"mood"
+)
+.innerHTML =
+"Face Detected 😊"
+
+}
+
+else{
+
+document
+.getElementById(
+"mood"
+)
+.innerHTML =
+"No Face 😐"
+
+}
+
+}
 
 </script>
 
