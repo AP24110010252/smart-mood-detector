@@ -5,7 +5,7 @@
 
 <title>Smart Classroom Mood Detector</title>
 
-<script src="https://unpkg.com/face-api.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 
 <style>
 
@@ -78,13 +78,13 @@ facingMode:"user"
 
 })
 
-video.srcObject=
+video.srcObject =
 stream
 
-video.onloadedmetadata=
+video.onloadedmetadata =
 async()=>{
 
-mood.innerHTML=
+mood.innerHTML =
 "Loading AI..."
 
 await Promise.all([
@@ -103,7 +103,7 @@ faceapi.nets
 
 ])
 
-mood.innerHTML=
+mood.innerHTML =
 "AI Ready 🤖"
 
 setInterval(
@@ -117,8 +117,8 @@ detectMood,
 
 catch(error){
 
-mood.innerHTML=
-"Allow Camera Permission ❌"
+mood.innerHTML =
+"Camera Error ❌"
 
 console.log(error)
 
@@ -130,7 +130,7 @@ async function detectMood(){
 
 try{
 
-const result=
+const result =
 
 await faceapi
 .detectSingleFace(
@@ -138,7 +138,12 @@ await faceapi
 video,
 
 new faceapi
-.TinyFaceDetectorOptions()
+.TinyFaceDetectorOptions({
+
+inputSize:512,
+scoreThreshold:0.2
+
+})
 
 )
 
@@ -146,7 +151,7 @@ new faceapi
 
 if(result){
 
-let emotion=
+let emotion =
 
 Object
 .entries(
@@ -177,25 +182,26 @@ emoji="😨"
 if(emotion==="disgusted")
 emoji="🤢"
 
-mood.innerHTML=
-emoji+
-" "+
-emotion
+mood.innerHTML =
+emoji+" "+emotion
 
 }
+
 else{
 
-mood.innerHTML=
+mood.innerHTML =
 "No Face Detected"
 
 }
 
 }
 
-catch{
+catch(error){
 
-mood.innerHTML=
+mood.innerHTML =
 "AI Error ❌"
+
+console.log(error)
 
 }
 
