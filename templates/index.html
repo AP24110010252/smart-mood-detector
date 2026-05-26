@@ -3,7 +3,7 @@
 
 <head>
 
-<title>Real Mood Detector</title>
+<title>Real AI Mood Detector</title>
 
 <style>
 
@@ -26,6 +26,8 @@ margin-top:20px;
 
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+
 </head>
 
 <body>
@@ -41,10 +43,37 @@ playsinline>
 </video>
 
 <h2 id="mood">
-Detecting Real Emotion...
+Loading AI...
 </h2>
 
 <script>
+
+const video =
+document.getElementById(
+"camera"
+)
+
+Promise.all([
+
+faceapi
+.nets
+.tinyFaceDetector
+.loadFromUri(
+"https://justadudewhohacks.github.io/face-api.js/models"
+),
+
+faceapi
+.nets
+.faceExpressionNet
+.loadFromUri(
+"https://justadudewhohacks.github.io/face-api.js/models"
+)
+
+])
+
+.then(start)
+
+function start(){
 
 navigator
 .mediaDevices
@@ -54,31 +83,77 @@ video:true
 
 .then((stream)=>{
 
-document
-.getElementById(
-"camera"
+video.srcObject=
+stream
+
+})
+
+}
+
+video
+.addEventListener(
+"play",
+
+()=>{
+
+setInterval(
+async()=>{
+
+const result=
+
+await faceapi
+.detectSingleFace(
+video,
+new faceapi
+.TinyFaceDetectorOptions()
 )
-.srcObject=stream
+
+.withFaceExpressions()
+
+if(result){
+
+let mood=
+
+Object
+.entries(
+result
+.expressions
+)
+
+.sort(
+(a,b)=>
+b[1]-a[1]
+)[0][0]
 
 document
 .getElementById(
 "mood"
 )
 .innerHTML=
-"Face Ready ✅"
+"😊 "+mood
 
-})
+}
 
-.catch(()=>{
+else{
 
 document
 .getElementById(
 "mood"
 )
 .innerHTML=
-"Camera Permission Denied ❌"
+"Show Face"
 
-})
+}
+
+},
+
+1500
+
+)
+
+}
+
+)
 
 </script>
 
