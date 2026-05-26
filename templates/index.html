@@ -1,55 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-
-<title>Smart Mood Detector</title>
-
-<style>
-
-body{
-background:black;
-text-align:center;
-}
-
-h1{
-color:aqua;
-font-size:50px;
-}
-
-video{
-width:90%;
-border:5px solid aqua;
-border-radius:20px;
-}
-
-#mood{
-color:aqua;
-font-size:35px;
-margin-top:20px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<h1>Smart Classroom Mood Detector</h1>
-
-<video
-id="camera"
-autoplay
-playsinline>
-</video>
-
-<p id="mood">
-Starting...
-</p>
-
 <script>
 
-const moods=[
+const moods = [
 "😊 Happy",
 "😐 Neutral",
 "😴 Sleepy",
@@ -65,27 +16,18 @@ video:true
 .then(function(stream){
 
 document
-.getElementById("camera")
+.getElementById(
+"camera"
+)
 .srcObject=
 stream
-
-setInterval(function(){
-
-let mood=
-moods[
-Math.floor(
-Math.random()*moods.length
-)
-]
 
 document
 .getElementById(
 "mood"
 )
 .innerHTML=
-"Mood: "+mood
-
-},3000)
+"Face Found 😊"
 
 })
 
@@ -96,12 +38,8 @@ document
 "mood"
 )
 .innerHTML=
-"Camera Permission Denied"
+"No Camera"
 
 })
 
 </script>
-
-</body>
-
-</html>
